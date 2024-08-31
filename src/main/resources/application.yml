@@ -1,0 +1,35 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: QUESTION-SERVICE
+          uri: lb://QUESTION-SERVICE
+          predicates:
+            - Path=/question/**
+          filters:
+            - name: AuthenticationFilter
+
+        - id: ANSWER-SERVICE
+          uri: lb://ANSWER-SERVICE
+          predicates:
+            - Path=/answer/**
+          filters:
+            - name: AuthenticationFilter
+
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+            - Path=/user/**
+
+eureka:
+  instance:
+    client:
+      serverUrl:
+        defaultZone: http://localhost:8761/eureka/
